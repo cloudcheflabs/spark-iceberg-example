@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ExportIcebergToExternalS3TestRunner {
+public class ImportExternalS3ToIcebergTestRunner {
 
 
     @Test
@@ -85,7 +85,7 @@ public class ExportIcebergToExternalS3TestRunner {
 
 
     @Test
-    public void fromIcebergToExternalS3() throws Exception {
+    public void fromExternalS3ToIceberg() throws Exception {
 
         // external s3 properties.
         String externalS3AccessKey = System.getProperty("externalS3AccessKey");
@@ -111,7 +111,7 @@ public class ExportIcebergToExternalS3TestRunner {
         String format = System.getProperty("format");
 
         String schema = "iceberg_db";
-        String table = "test_iceberg_parquet";
+        String table = "test_iceberg_parquet_load";
 
 
         // parameter map for external s3 properties.
@@ -129,9 +129,29 @@ public class ExportIcebergToExternalS3TestRunner {
         // print constructed param map.
         System.out.println("constructed param map: " + paramMap);
 
-        ExportIcebergToExternalS3 exportIcebergToExternalS3 =
-                new ExportIcebergToExternalS3();
-        exportIcebergToExternalS3.run(
+        SparkSession sparkForIceberg = ImportExportHelper.createSparkSessionForIcebergRESTCatalog(
+                s3AccessKey,
+                s3SecretKey,
+                s3Endpoint,
+                s3Region,
+                s3Bucket,
+                restUrl,
+                restWarehouse,
+                restToken,
+                true
+        );
+
+        // create schema.
+        sparkForIceberg.sql("CREATE SCHEMA IF NOT EXISTS iceberg." + schema + " ");
+
+        // create table.
+        String createTableSql = FileUtils.fileToString("create-table-for-parquet-load.sql", true);
+        sparkForIceberg.sql(createTableSql);
+
+        // load external parquet to iceberg table.
+        ImportExternalS3ToIceberg importExternalS3ToIceberg =
+                new ImportExternalS3ToIceberg();
+        importExternalS3ToIceberg.run(
                 s3Bucket,
                 s3AccessKey,
                 s3SecretKey,
@@ -144,32 +164,11 @@ public class ExportIcebergToExternalS3TestRunner {
                 true
         );
 
-        // spark session for external s3.
-        SparkSession spark = ImportExportHelper.createSparkSessionForExternalS3(
-                externalS3AccessKey,
-                externalS3SecretKey,
-                externalS3Endpoint,
-                externalS3Region,
-                externalS3Bucket,
-                true
-        );
+        // show table rows.
+        String tableName = "iceberg" + "." + schema + "." + table;
+        Dataset<Row> resultDf = sparkForIceberg.table(tableName);
+        resultDf.show(30);
 
-        String path= "s3a://" + externalS3Bucket + externalS3Path;
-
-        Dataset<Row> externalDf = null;
-        if(format.equals(ImportExportHelper.FORMAT_CSV)) {
-            externalDf = spark.read().csv(path);
-        } else if(format.equals(ImportExportHelper.FORMAT_JSON)) {
-            externalDf = spark.read().json(path);
-        } else if(format.equals(ImportExportHelper.FORMAT_PARQUET)) {
-            externalDf = spark.read().parquet(path);
-        } else if(format.equals(ImportExportHelper.FORMAT_ORC)) {
-            externalDf = spark.read().orc(path);
-        } else {
-            throw new RuntimeException("Unsupported file format [" + format + "]!");
-        }
-
-        externalDf.show(30);
-        System.out.println("row count [" + externalDf.count() + "] for the path [" + path + "]");
+        System.out.printf("table %s row count %d\n", tableName, resultDf.count());
     }
 }
