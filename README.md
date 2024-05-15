@@ -49,6 +49,8 @@ s3://chango-bucket/test-spark-jobs/spark-iceberg-example-1.0.0-SNAPSHOT-spark-jo
 
 ### Run Spark Job on Spark Cluster
 
+> Before running spark job, you need to create iceberg table.
+
 ```agsl
 export CHANGO_S3_ACCESS_KEY=xxx
 export CHANGO_S3_SECRET_KEY=xxx
