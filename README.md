@@ -3,6 +3,14 @@
 This is spark iceberg examples to show how to load external s3 data like parquet to iceberg table with Iceberg REST catalog.
 
 
+## Prerequisites
+
+You need the following to run examples.
+
+- Java 17
+- Maven 3.x
+
+
 ## Load External S3 Data to Iceberg Table
 
 ### Install AWS S3 Client
