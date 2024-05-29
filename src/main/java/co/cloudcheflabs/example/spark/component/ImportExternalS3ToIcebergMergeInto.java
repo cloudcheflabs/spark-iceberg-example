@@ -111,9 +111,6 @@ public class ImportExternalS3ToIcebergMergeInto {
                 isLocal
         );
 
-        // create dataframe from global temp view table.
-        Dataset<Row> newDf = sparkForIceberg.sql("select * from global_temp." + globalTempTable);
-
         // chango iceberg table.
         String changoIcebergTable = "iceberg" + "." + icebergSchema + "." + icebergTable;
         System.out.println("changoIcebergTable: " + changoIcebergTable);
@@ -137,7 +134,7 @@ public class ImportExternalS3ToIcebergMergeInto {
                 "WHEN NOT MATCHED THEN INSERT *  ";
         LOG.info("merge into query: {}", mergeInto);
 
-        spark.sql(mergeInto);
+        sparkForIceberg.sql(mergeInto);
         LOG.info("merge into query executed.");
     }
 
