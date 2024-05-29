@@ -111,9 +111,22 @@ public class ImportExternalS3ToIcebergMergeInto {
                 isLocal
         );
 
+        // create dataframe from global temp view table.
+        Dataset<Row> newDf = sparkForIceberg.sql("select * from global_temp." + globalTempTable);
+
         // chango iceberg table.
         String changoIcebergTable = "iceberg" + "." + icebergSchema + "." + icebergTable;
         System.out.println("changoIcebergTable: " + changoIcebergTable);
+
+        StructType schema = sparkForIceberg.table(changoIcebergTable).schema();
+
+        // apply schema to temp view dataframe.
+        Dataset<Row> schemaAppliedDf = sparkForIceberg.createDataFrame(newDf.javaRDD(), schema);
+
+        // create temp table.
+        String tempTable = globalTempTable;
+        schemaAppliedDf.createOrReplaceTempView(tempTable);
+
 
         String conditionQuery = "(";
         int idColumnCount = 0;
@@ -128,7 +141,7 @@ public class ImportExternalS3ToIcebergMergeInto {
 
         String mergeInto = "" +
                 "MERGE INTO " + changoIcebergTable + " t \n" +
-                "USING (select * from global_temp." + globalTempTable + ") s \n" +
+                "USING (select * from " + tempTable + ") s \n" +
                 "ON " + conditionQuery + "   \n" +
                 "WHEN MATCHED THEN UPDATE SET * \n" +
                 "WHEN NOT MATCHED THEN INSERT *  ";
