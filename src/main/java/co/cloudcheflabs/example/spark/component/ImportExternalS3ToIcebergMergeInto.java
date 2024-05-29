@@ -119,7 +119,7 @@ public class ImportExternalS3ToIcebergMergeInto {
         System.out.println("changoIcebergTable: " + changoIcebergTable);
 
         String conditionQuery = "(";
-        int idColumnCount = idColumnList.size();
+        int idColumnCount = 0;
         for(String idColumn : idColumnList) {
             conditionQuery += "t." + idColumn + " = " + "s." + idColumn;
             if(idColumnCount != idColumnList.size() - 1) {
