@@ -65,8 +65,8 @@
 		<spring.version>5.3.34</spring.version>
 
 		<!-- scala -->
-		<scala.version>2.12.19</scala.version>
-		<scala.binary.version>2.12</scala.binary.version>
+		<scala.version>2.13.10</scala.version>
+		<scala.binary.version>2.13</scala.binary.version>
 
 		<!-- spark -->
 		<spark.version>3.4.3</spark.version>
