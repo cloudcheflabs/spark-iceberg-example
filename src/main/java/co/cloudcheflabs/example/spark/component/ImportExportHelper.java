@@ -27,7 +27,9 @@ public class ImportExportHelper {
 
         // chango iceberg schema and table.
         ICEBERG_SCHEMA("icebergSchema"),
-        ICEBERG_TABLE("icebergTable");
+        ICEBERG_TABLE("icebergTable"),
+
+        ID_COLUMNS("idColumns");
 
         private String key;
 
