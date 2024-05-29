@@ -75,7 +75,7 @@
 		<hadoop.version>3.3.4</hadoop.version>
 
 		<!-- iceberg -->
-		<iceberg.version>1.4.3</iceberg.version>
+		<iceberg.version>1.4.2</iceberg.version>
 	</properties>
 
 	<dependencies>
