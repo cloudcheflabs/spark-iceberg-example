@@ -142,7 +142,7 @@ public class ImportExternalS3ToIcebergMergeInto {
         }
 
         String mergeInto = "" +
-                "MERGE INTO " + changoIcebergTable + " t\n" +
+                "MERGE INTO " + changoIcebergTable + " t \n" +
                 "USING (select * from global_temp." + globalTempTable + ") s \n" +
                 "ON " + conditionQuery + "   \n" +
                 "WHEN MATCHED THEN UPDATE " + updateQuery + " \n" +
