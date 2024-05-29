@@ -65,7 +65,7 @@ public class ImportExternalS3ToIcebergMergeInto {
                 path = "s3a://" + externalS3Bucket + "/" + externalS3Path;
             }
         }
-        System.out.println("path: " + path);
+        LOG.info("s3 path: {}", path);
 
         // ================ from external s3.
 
