@@ -47,7 +47,7 @@ s3://chango-bucket/test-spark-jobs/spark-iceberg-example-1.0.0-SNAPSHOT-spark-jo
 ;
 ```
 
-### Run Spark Job using Merge Into on Spark Cluster
+### Run Spark Job using MERGE INTO on Spark Cluster
 
 This example shows to load parquet files in external s3 to iceberg table using `MERGE INTO`.
 
