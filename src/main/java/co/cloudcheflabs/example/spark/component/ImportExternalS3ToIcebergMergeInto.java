@@ -129,23 +129,11 @@ public class ImportExternalS3ToIcebergMergeInto {
         }
         conditionQuery += ")";
 
-        // iceberg table schema.
-        StructType schema = sparkForIceberg.table(changoIcebergTable).schema();
-        String updateQuery = "SET ";
-        int fieldNameCount = 0;
-        for(String fieldName : schema.fieldNames()) {
-            updateQuery += "t." + fieldName + " = s." + fieldName;
-            if(fieldNameCount != schema.fieldNames().length - 1) {
-                updateQuery += ", ";
-            }
-            fieldNameCount++;
-        }
-
         String mergeInto = "" +
                 "MERGE INTO " + changoIcebergTable + " t \n" +
                 "USING (select * from global_temp." + globalTempTable + ") s \n" +
                 "ON " + conditionQuery + "   \n" +
-                "WHEN MATCHED THEN UPDATE " + updateQuery + " \n" +
+                "WHEN MATCHED THEN UPDATE SET * \n" +
                 "WHEN NOT MATCHED THEN INSERT *  ";
         LOG.info("merge into query: {}", mergeInto);
 
