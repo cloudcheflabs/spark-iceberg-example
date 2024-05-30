@@ -38,6 +38,8 @@ public class HiddenPartitionTestRunner {
         String icebergSchema = System.getProperty("schema");
         String icebergTable = System.getProperty("table");
 
+        String tsColumn = System.getProperty("tsColumn");
+
         boolean isLocal = true;
 
         // spark session for chango iceberg rest catalog.
@@ -69,7 +71,7 @@ public class HiddenPartitionTestRunner {
         JavaRDD<String> javaRDD = jsc.parallelize(jsonList);
         Dataset<String> jsonDs = sparkForIceberg.createDataset(javaRDD.rdd(), Encoders.STRING());
         Dataset<Row> df = sparkForIceberg.read().json(jsonDs);
-        df.withColumn("ts", df.col("ts").cast(DataTypes.TimestampType));
+        df.withColumn(tsColumn, df.col(tsColumn).cast(DataTypes.TimestampType));
 
         Dataset<Row> newDf = sparkForIceberg.createDataFrame(df.javaRDD(), schema);
         newDf.writeTo(tableName).append();
