@@ -76,7 +76,7 @@ public class HiddenPartitionTestRunner {
 
         df.printSchema();
 
-//        Dataset<Row> newDf = sparkForIceberg.createDataFrame(df.javaRDD(), schema);
-//        newDf.writeTo(tableName).append();
+        Dataset<Row> newDf = sparkForIceberg.createDataFrame(df.javaRDD(), schema);
+        newDf.writeTo(tableName).append();
     }
 }
