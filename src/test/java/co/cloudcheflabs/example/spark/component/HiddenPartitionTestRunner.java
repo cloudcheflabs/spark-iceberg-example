@@ -3,11 +3,12 @@ package co.cloudcheflabs.example.spark.component;
 import co.cloudcheflabs.example.spark.util.StringUtils;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.sql.*;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Encoders;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructType;
-import org.apache.spark.sql.types.TimestampType;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,9 +72,11 @@ public class HiddenPartitionTestRunner {
         JavaRDD<String> javaRDD = jsc.parallelize(jsonList);
         Dataset<String> jsonDs = sparkForIceberg.createDataset(javaRDD.rdd(), Encoders.STRING());
         Dataset<Row> df = sparkForIceberg.read().json(jsonDs);
-        df.withColumn(tsColumn, df.col(tsColumn).cast(DataTypes.TimestampType));
+        df = df.withColumn(tsColumn, df.col(tsColumn).cast(DataTypes.TimestampType));
 
-        Dataset<Row> newDf = sparkForIceberg.createDataFrame(df.javaRDD(), schema);
-        newDf.writeTo(tableName).append();
+        df.printSchema();
+
+//        Dataset<Row> newDf = sparkForIceberg.createDataFrame(df.javaRDD(), schema);
+//        newDf.writeTo(tableName).append();
     }
 }
