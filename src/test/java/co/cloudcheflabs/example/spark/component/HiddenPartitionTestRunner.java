@@ -41,8 +41,6 @@ public class HiddenPartitionTestRunner {
         String icebergSchema = System.getProperty("schema");
         String icebergTable = System.getProperty("table");
 
-        String tsColumn = System.getProperty("tsColumn");
-
         boolean isLocal = true;
 
         // spark session for chango iceberg rest catalog.
