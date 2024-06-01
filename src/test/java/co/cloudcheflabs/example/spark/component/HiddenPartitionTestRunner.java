@@ -7,7 +7,9 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.types.DataType;
 import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -72,7 +74,13 @@ public class HiddenPartitionTestRunner {
         JavaRDD<String> javaRDD = jsc.parallelize(jsonList);
         Dataset<String> jsonDs = sparkForIceberg.createDataset(javaRDD.rdd(), Encoders.STRING());
         Dataset<Row> df = sparkForIceberg.read().json(jsonDs);
-        df = df.withColumn(tsColumn, df.col(tsColumn).cast(DataTypes.TimestampType));
+
+        // convert data type according to schema.
+        for(StructField structField : schema.fields()) {
+            String field = structField.name();
+            DataType dataType = structField.dataType();
+            df = df.withColumn(field, df.col(field).cast(dataType));
+        }
 
         df.printSchema();
 
