@@ -103,7 +103,7 @@ public class ImportExportHelper {
             String s3SecretKey,
             String s3Endpoint,
             String s3Region,
-            String bucket,
+            String s3Bucket,
             String restUrl,
             String restWarehouse,
             String restToken,
@@ -138,12 +138,12 @@ public class ImportExportHelper {
                 .getOrCreate();
 
         Configuration hadoopConfiguration = spark.sparkContext().hadoopConfiguration();
-        hadoopConfiguration.set("fs.s3a.bucket." + bucket + ".endpoint", s3Endpoint);
+        hadoopConfiguration.set("fs.s3a.bucket." + s3Bucket + ".endpoint", s3Endpoint);
         if(s3Region != null) {
-            hadoopConfiguration.set("fs.s3a.bucket." + bucket + ".endpoint.region", s3Region);
+            hadoopConfiguration.set("fs.s3a.bucket." + s3Bucket + ".endpoint.region", s3Region);
         }
-        hadoopConfiguration.set("fs.s3a.bucket." + bucket + ".access.key", s3AccessKey);
-        hadoopConfiguration.set("fs.s3a.bucket." + bucket + ".secret.key", s3SecretKey);
+        hadoopConfiguration.set("fs.s3a.bucket." + s3Bucket + ".access.key", s3AccessKey);
+        hadoopConfiguration.set("fs.s3a.bucket." + s3Bucket + ".secret.key", s3SecretKey);
         hadoopConfiguration.set("fs.s3a.path.style.access", "true");
         hadoopConfiguration.set("fs.s3a.change.detection.mode", "warn");
         hadoopConfiguration.set("fs.s3a.change.detection.version.required", "false");
