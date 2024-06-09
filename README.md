@@ -82,10 +82,10 @@ spark-submit \
 --conf spark.executorEnv.AWS_REGION=$CHANGO_S3_REGION \
 --conf spark.executorEnv.AWS_ACCESS_KEY_ID=${CHANGO_S3_ACCESS_KEY} \
 --conf spark.executorEnv.AWS_SECRET_ACCESS_KEY=${CHANGO_S3_SECRET_KEY} \
---conf spark.hadoop.fs.s3a.$CHANGO_S3_BUCKET.access.key=${CHANGO_S3_ACCESS_KEY} \
---conf spark.hadoop.fs.s3a.$CHANGO_S3_BUCKET.secret.key=${CHANGO_S3_SECRET_KEY} \
---conf spark.hadoop.fs.s3a.$CHANGO_S3_BUCKET.endpoint=${CHANGO_S3_ENDPOINT} \
---conf spark.hadoop.fs.s3a.$CHANGO_S3_BUCKET.endpoint.region=$CHANGO_S3_REGION \
+--conf spark.hadoop.fs.s3a.bucket.$CHANGO_S3_BUCKET.access.key=${CHANGO_S3_ACCESS_KEY} \
+--conf spark.hadoop.fs.s3a.bucket.$CHANGO_S3_BUCKET.secret.key=${CHANGO_S3_SECRET_KEY} \
+--conf spark.hadoop.fs.s3a.bucket.$CHANGO_S3_BUCKET.endpoint=${CHANGO_S3_ENDPOINT} \
+--conf spark.hadoop.fs.s3a.bucket.$CHANGO_S3_BUCKET.endpoint.region=$CHANGO_S3_REGION \
 --conf spark.hadoop.fs.s3a.connection.ssl.enabled=true \
 --conf spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem \
 --conf spark.hadoop.fs.s3a.fast.upload=true \
